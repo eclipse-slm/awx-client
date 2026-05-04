@@ -60,10 +60,12 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>21</java.version>
+        <maven.compiler.release>${java.version}</maven.compiler.release>
         <kotlin.version>2.2.21</kotlin.version>
 
         <maven.plugin.central-publishing>0.10.0</maven.plugin.central-publishing>
         <maven.plugin.gpg>3.2.8</maven.plugin.gpg>
+        <maven.plugin.compiler>3.15.0</maven.plugin.compiler>
         <maven.plugin.surefire>3.5.3</maven.plugin.surefire>
         <maven.plugin.source>3.3.1</maven.plugin.source>
         <maven.plugin.javadoc>3.7.0</maven.plugin.javadoc>
@@ -203,6 +205,14 @@
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven.plugin.compiler}</version>
+                    <configuration>
+                        <release>${maven.compiler.release}</release>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven.plugin.surefire}</version>
                 </plugin>
@@ -210,6 +220,12 @@
                     <groupId>org.jetbrains.kotlin</groupId>
                     <artifactId>kotlin-maven-plugin</artifactId>
                     <version>${maven.plugin.kotlin}</version>
+                    <configuration>
+                        <jvmTarget>${java.version}</jvmTarget>
+                        <args>
+                            <arg>-Xannotation-default-target=param-property</arg>
+                        </args>
+                    </configuration>
                     <executions>
                         <execution>
                             <id>compile</id>
@@ -217,7 +233,6 @@
                                 <goal>compile</goal>
                             </goals>
                             <configuration>
-                                <jvmTarget>${java.version}</jvmTarget>
                                 <sourceDirs>
                                     <sourceDir>${project.basedir}/src/main/java</sourceDir>
                                     <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
@@ -230,7 +245,6 @@
                                 <goal>test-compile</goal>
                             </goals>
                             <configuration>
-                                <jvmTarget>${java.version}</jvmTarget>
                                 <sourceDirs>
                                     <sourceDir>${project.basedir}/src/test/java</sourceDir>
                                     <sourceDir>${project.basedir}/src/test/kotlin</sourceDir>
@@ -272,6 +286,10 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.sonatype.central</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>
